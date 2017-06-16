@@ -1,4 +1,4 @@
-defmodule MeterToFeetConverter do
+defmodule MeterConverter do
   def convert(:feet, m) when is_number m and m >= 0 do
     m * 3.28084
   end
