@@ -6,7 +6,7 @@ defmodule Metex.Worker do
       _ ->
         IO.puts "don't know how to process this message"
     end
-    loop
+    loop()
   end
 
   defp temperature_of(location) do
@@ -21,7 +21,7 @@ defmodule Metex.Worker do
 
   defp url_for(location) do
     location = URI.encode(location)
-    "http://api.openweathermap.org/data/2.5/weather?q=#{location}&appid=#{apiKey}"
+    "http://api.openweathermap.org/data/2.5/weather?q=#{location}&appid=#{apiKey()}"
   end
 
   defp parse_response({:ok, %HTTPoison.Response{body: body, status_code: 200}}) do
