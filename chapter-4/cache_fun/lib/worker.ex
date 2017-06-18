@@ -16,16 +16,43 @@ defmodule Cache do
     GenServer.call(@name, {:read, table})
   end
 
+  def delete(table) do
+    GenServer.call(@name, {:delete, table})
+  end
+
+  def clear do
+    GenServer.cast(@name, :clear)
+  end
+
+  def exist?(table) do
+    GenServer.call(@name, {:exist, table})
+  end
+
+  ## Server API
   def init(:ok) do
     {:ok, %{}}
   end
 
   def handle_call({:write, {table, data}}, _from, store) do
     store = Map.put_new(store, table, data)
-    {:reply, "Write to #{to_string(table)}", store}
+    {:reply, store, store}
   end
 
   def handle_call({:read, table}, _from, store) do
     {:reply, Map.get(store, table), store}
+  end
+
+  def handle_call({:delete, table}, _from, store) do
+    store = Map.update(store, table, [], &(&1 = []))
+    {:reply, store, store}
+  end
+
+  def handle_call({:exist, table}, _from, store) do
+    exist = Map.has_key?(store, table)
+    {:reply, exist, store}
+  end
+
+  def handle_cast(:clear, _store) do
+    {:noreply, %{}}
   end
 end
